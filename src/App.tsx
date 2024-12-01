@@ -2,6 +2,7 @@ import { Header } from './components/header/header.component';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { HomePage } from './pages/home.page';
 import { FindPage } from './pages/find.page';
+import { UserSheet } from './components/sheet/user-sheet.component';
 
 export default function App() {
   return (
@@ -13,6 +14,7 @@ export default function App() {
           <Route path='/find' element={<FindPage />} />
         </Routes>
       </BrowserRouter>
+      <UserSheet />
     </div>
   );
 }
