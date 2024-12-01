@@ -8,7 +8,6 @@ export const useUserFlow = () => {
 
   const moveFromTo = async (from: string, to: string) => {
     const path = await getPersonNodePath(from, to);
-    console.log(path);
 
     const newNodes: Node<PersonNode>[] = [
       ...path

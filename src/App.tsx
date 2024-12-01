@@ -1,19 +1,18 @@
-import '@xyflow/react/dist/style.css';
-import Flow from './components/tree/flow.component';
-import { CommandMenu } from './components/command/command-menu.component';
-import { ReactFlowProvider } from '@xyflow/react';
-import { UserSheet } from './components/sheet/user-sheet.component';
 import { Header } from './components/header/header.component';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { HomePage } from './pages/home.page';
+import { FindPage } from './pages/find.page';
 
 export default function App() {
   return (
     <div style={{ width: '100vw', height: '100vh' }}>
       <Header />
-      <ReactFlowProvider>
-        <Flow />
-        <CommandMenu />
-        <UserSheet />
-      </ReactFlowProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path='/' element={<HomePage />} />
+          <Route path='/find' element={<FindPage />} />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }

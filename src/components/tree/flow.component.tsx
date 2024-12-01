@@ -6,6 +6,7 @@ import {
   BackgroundVariant,
   ConnectionLineType,
   Node,
+  useReactFlow,
 } from '@xyflow/react';
 import '@xyflow/react/dist/base.css';
 
@@ -29,6 +30,8 @@ const Flow = () => {
     useNodesState<Node<PersonNode>>(layoutedNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(layoutedEdges);
 
+  const { fitView } = useReactFlow();
+
   useEffect(() => {
     getPersonNodeById('7').then((x) => {
       const { nodes, edges } = getLayoutedElements(
@@ -45,8 +48,10 @@ const Flow = () => {
 
       setNodes(nodes);
       setEdges(edges);
+
+      fitView({ padding: 3 });
     });
-  }, [setEdges, setNodes]);
+  }, [setEdges, setNodes, fitView]);
 
   return (
     <ReactFlow
@@ -59,9 +64,6 @@ const Flow = () => {
       fitView
       snapToGrid
       nodeTypes={nodeTypes}
-      fitViewOptions={{
-        padding: 2,
-      }}
       proOptions={{ hideAttribution: true }}
       style={{ backgroundColor: '#F7F9FB' }}
     >

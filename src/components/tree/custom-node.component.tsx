@@ -20,7 +20,7 @@ interface CustomNodeProps extends NodeProps {
 }
 
 const CustomNode = ({ data }: CustomNodeProps) => {
-  const { setNodes, setEdges, getNodes, getEdges } =
+  const { setNodes, setEdges, getNodes, getEdges, fitView } =
     useReactFlow<Node<PersonNode>>();
   const [areChildrenLoaded, setAreChildrenLoaded] = useState(false);
 
@@ -141,6 +141,8 @@ const CustomNode = ({ data }: CustomNodeProps) => {
 
     setNodes(updatedNodes);
     setEdges(updatedEdges);
+
+    fitView({ padding: 0.1 });
   };
 
   const { selected, setSelected } = useSelectedStore();
