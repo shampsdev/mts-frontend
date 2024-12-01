@@ -1,4 +1,4 @@
-import { PersonNode } from "./person-node.interface";
+import { PersonNode } from "./interfaces/person-node.interface";
 
 export const data: PersonNode[] = [
     {
