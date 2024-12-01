@@ -59,10 +59,10 @@ const Flow = () => {
       fitView
       snapToGrid
       nodeTypes={nodeTypes}
-      snapGrid={[10, 10]}
       fitViewOptions={{
         padding: 5,
       }}
+      proOptions={{ hideAttribution: true }}
       style={{ backgroundColor: '#F7F9FB' }}
     >
       <Background gap={15} size={1} variant={BackgroundVariant.Dots} />

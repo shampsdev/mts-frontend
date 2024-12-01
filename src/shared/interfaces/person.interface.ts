@@ -7,6 +7,7 @@ export interface Person {
   id: string;
   surname: string;
   name: string;
+  image: string;
   middle_name_rus: string;
   jobtitle: string;
   status: string;

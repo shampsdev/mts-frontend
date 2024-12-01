@@ -81,7 +81,7 @@ export function CommandMenu() {
               }}
               key={result.id}
             >
-              {result.name}
+              {result.name} {result.surname} {result.middle_name_rus}
             </CommandItem>
           );
         })}

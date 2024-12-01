@@ -11,6 +11,8 @@ import {
 import { getPersonNodeById } from '@/shared/api/node.api';
 import { getLayoutedElements } from '@/lib/tree-layout';
 import { ChevronDown } from 'lucide-react';
+import { useSelectedStore } from '@/shared/store/selected.store';
+import { getPersonById } from '@/shared/api/people.api';
 
 interface CustomNodeProps extends NodeProps {
   data: PersonNode;
@@ -140,27 +142,38 @@ const CustomNode = ({ data }: CustomNodeProps) => {
     setEdges(updatedEdges);
   };
 
+  const { setSelected } = useSelectedStore();
+
+  const handleNodeClick = async () => {
+    const person = await getPersonById(data.id);
+    setSelected(person);
+  };
+
   return (
     <div className='p-4 min-w-52 shadow-sm rounded-xl bg-white border-[1.51px]'>
-      <div className='flex items-center'>
-        <img
-          className='h-12 aspect-square rounded-full overflow-hidden'
-          src={
-            data.image === ''
-              ? 'https://thispersondoesnotexist.com/'
-              : data.image
-          }
-        />
-        <div className='mx-4 h-fit'>
-          <div className='text-md font-medium'>{data.name}</div>
-          <div className='text-sm text-gray-500'>{data.jobtitle}</div>
-        </div>
-        {!areChildrenLoaded && (
-          <ChevronDown
-            className='cursor-pointer'
-            onClick={() => onNodeButtonClick(data)}
+      <div className='flex'>
+        <div onClick={handleNodeClick} className='flex items-center'>
+          <img
+            className='h-12 aspect-square rounded-full overflow-hidden'
+            src={
+              data.image === ''
+                ? 'https://thispersondoesnotexist.com/'
+                : data.image
+            }
           />
-        )}
+          <div className='mx-4 h-fit'>
+            <div className='text-md font-medium'>{data.name}</div>
+            <div className='text-sm text-gray-500'>{data.jobtitle}</div>
+          </div>
+        </div>
+        <div className='h-fit'>
+          {!areChildrenLoaded && (
+            <ChevronDown
+              className='cursor-pointer'
+              onClick={() => onNodeButtonClick(data)}
+            />
+          )}
+        </div>
       </div>
       <Handle
         className='border border-gray-400 w-3 h-3 bg-white'
