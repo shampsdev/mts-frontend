@@ -36,10 +36,9 @@ const Flow = () => {
 
   useEffect(() => {
     if (selected) {
-      console.log(selected);
       fitView({ nodes: [selected], duration: 800 });
     }
-  }, [fitView, getViewport, selected, setViewport]);
+  }, [fitView, getViewport, selected, setViewport, nodes]);
 
   useEffect(() => {
     getPersonNodeById('7').then((x) => {
@@ -58,7 +57,7 @@ const Flow = () => {
       setNodes(nodes);
       setEdges(edges);
     });
-  }, [setEdges, setNodes, fitView]);
+  }, [setEdges, setNodes]);
 
   return (
     <ReactFlow
