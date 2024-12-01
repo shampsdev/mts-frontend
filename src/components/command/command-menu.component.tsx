@@ -19,7 +19,6 @@ export function CommandMenu() {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<Person[]>([]);
   const [error, setError] = useState<string | null>(null);
-
   const { moveFromTo } = useUserFlow();
 
   const handleQueryChange = (search: string) => {
@@ -50,10 +49,6 @@ export function CommandMenu() {
   }, [query]);
 
   useEffect(() => {
-    console.log(results);
-  }, [results]);
-
-  useEffect(() => {
     const down = (e: KeyboardEvent) => {
       if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
@@ -62,7 +57,7 @@ export function CommandMenu() {
     };
     document.addEventListener('keydown', down);
     return () => document.removeEventListener('keydown', down);
-  }, []);
+  }, [setOpen]);
 
   return (
     <CommandDialog open={open} onOpenChange={setOpen}>
@@ -79,10 +74,10 @@ export function CommandMenu() {
         {results.map((result) => {
           return (
             <CommandItem
-              onSelect={async () => {
-                moveFromTo('8', result.id);
-                setSelected(result);
+              onSelect={() => {
                 setOpen(false);
+                setSelected(result);
+                moveFromTo('8', result.id);
               }}
               key={result.id}
               className='flex justify-between'
@@ -94,6 +89,10 @@ export function CommandMenu() {
                 </div>
                 <span className='text-gray-300'>|</span>
                 <div className='text-gray-400'>id{result.id}</div>
+                <span className='text-gray-300'>|</span>
+                <div className='text-gray-400 line-clamp-1'>
+                  {result.jobtitle}
+                </div>
               </div>
               <div className='flex gap-5'>
                 {result.division != '' && (

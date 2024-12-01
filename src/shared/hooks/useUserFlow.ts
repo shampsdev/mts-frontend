@@ -4,7 +4,8 @@ import { Edge, Node, useReactFlow } from '@xyflow/react';
 import { PersonNode } from '../interfaces/person-node.interface';
 
 export const useUserFlow = () => {
-  const { setNodes, setEdges, getNodes, getEdges } = useReactFlow();
+  const { setNodes, setEdges, getNodes, getEdges } =
+    useReactFlow();
 
   const moveFromTo = async (from: string, to: string) => {
     const path = await getPersonNodePath(from, to);

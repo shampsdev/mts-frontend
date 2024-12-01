@@ -142,7 +142,7 @@ const CustomNode = ({ data }: CustomNodeProps) => {
     setNodes(updatedNodes);
     setEdges(updatedEdges);
 
-    fitView({ padding: 0.1 });
+    fitView({ padding: 3, duration: 800 });
   };
 
   const { selected, setSelected } = useSelectedStore();

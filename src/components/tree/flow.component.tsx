@@ -15,6 +15,7 @@ import { getPersonNodeById } from '@/shared/api/node.api';
 import { PersonNode } from '@/shared/interfaces/person-node.interface';
 import { getLayoutedElements } from '@/lib/tree-layout';
 import { useEffect } from 'react';
+import { useSelectedStore } from '@/shared/store/selected.store';
 
 const nodeTypes = {
   custom: CustomNode,
@@ -30,7 +31,15 @@ const Flow = () => {
     useNodesState<Node<PersonNode>>(layoutedNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(layoutedEdges);
 
-  const { fitView } = useReactFlow();
+  const { selected } = useSelectedStore();
+  const { fitView, setViewport, getViewport } = useReactFlow();
+
+  useEffect(() => {
+    if (selected) {
+      console.log(selected);
+      fitView({ nodes: [selected], duration: 800 });
+    }
+  }, [fitView, getViewport, selected, setViewport]);
 
   useEffect(() => {
     getPersonNodeById('7').then((x) => {
@@ -48,8 +57,6 @@ const Flow = () => {
 
       setNodes(nodes);
       setEdges(edges);
-
-      fitView({ padding: 3 });
     });
   }, [setEdges, setNodes, fitView]);
 
@@ -62,7 +69,6 @@ const Flow = () => {
       onEdgesChange={onEdgesChange}
       connectionLineType={ConnectionLineType.SmoothStep}
       fitView
-      snapToGrid
       nodeTypes={nodeTypes}
       proOptions={{ hideAttribution: true }}
       style={{ backgroundColor: '#F7F9FB' }}
