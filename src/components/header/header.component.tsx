@@ -21,7 +21,10 @@ export const Header = () => {
           <Users className='p-1' />
         </div>
         <div
-          onClick={() => setOpen(true)}
+          onClick={() => {
+            navigate('/');
+            setOpen(true);
+          }}
           className='rounded-lg hover:bg-stone-100 p-1 cursor-pointer'
         >
           <Search className='p-1' />
