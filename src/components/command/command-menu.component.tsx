@@ -10,9 +10,10 @@ import { Person } from '@/shared/interfaces/person.interface';
 import { API_URL, colors } from '@/shared/constants';
 import { useUserFlow } from '@/shared/hooks/useUserFlow';
 import { Badge } from '../ui/badge';
+import { useCommandStore } from '@/shared/store/command.store';
 
 export function CommandMenu() {
-  const [open, setOpen] = useState(false);
+  const { open, setOpen } = useCommandStore();
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<Person[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -54,7 +55,7 @@ export function CommandMenu() {
     const down = (e: KeyboardEvent) => {
       if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
-        setOpen((open) => !open);
+        setOpen(true);
       }
     };
     document.addEventListener('keydown', down);
