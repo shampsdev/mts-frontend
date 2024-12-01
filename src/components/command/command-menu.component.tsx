@@ -7,8 +7,9 @@ import {
   CommandItem,
 } from '../ui/command';
 import { Person } from '@/shared/interfaces/person.interface';
-import { API_URL } from '@/shared/constants';
+import { API_URL, colors } from '@/shared/constants';
 import { useUserFlow } from '@/shared/hooks/useUserFlow';
+import { Badge } from '../ui/badge';
 
 export function CommandMenu() {
   const [open, setOpen] = useState(false);
@@ -63,7 +64,7 @@ export function CommandMenu() {
   return (
     <CommandDialog open={open} onOpenChange={setOpen}>
       <CommandInput
-        placeholder='Type a command or search...'
+        placeholder='ФИО, Депертамент, Должность'
         value={query}
         onValueChange={handleQueryChange}
       />
@@ -80,8 +81,27 @@ export function CommandMenu() {
                 setOpen(false);
               }}
               key={result.id}
+              className='flex justify-between'
             >
-              {result.name} {result.surname} {result.middle_name_rus}
+              <div className='flex items-center gap-3'>
+                <img className='h-5 w-5 rounded-full' src={result.image} />
+                <div>
+                  {result.surname} {result.name} {result.middle_name_rus}
+                </div>
+                <span className='text-gray-300'>|</span>
+                <div className='text-gray-400'>id{result.id}</div>
+              </div>
+              <div className='flex gap-5'>
+                {result.division != '' && (
+                  <Badge
+                    style={{
+                      backgroundColor: colors[result.division] ?? 'black',
+                    }}
+                  >
+                    {result.division}
+                  </Badge>
+                )}
+              </div>
             </CommandItem>
           );
         })}

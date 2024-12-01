@@ -60,7 +60,7 @@ const Flow = () => {
       snapToGrid
       nodeTypes={nodeTypes}
       fitViewOptions={{
-        padding: 5,
+        padding: 2,
       }}
       proOptions={{ hideAttribution: true }}
       style={{ backgroundColor: '#F7F9FB' }}
