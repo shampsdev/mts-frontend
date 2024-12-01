@@ -6,4 +6,6 @@ export interface PersonNode extends Record<string, unknown> {
     jobtitle: string;
     children: string[];
     parents: string[];
+    groupid: string;
+    groupname: string;
 }

@@ -13,6 +13,7 @@ import { getLayoutedElements } from '@/lib/tree-layout';
 import { ChevronDown } from 'lucide-react';
 import { useSelectedStore } from '@/shared/store/selected.store';
 import { getPersonById } from '@/shared/api/people.api';
+import { colors } from '@/shared/constants';
 
 interface CustomNodeProps extends NodeProps {
   data: PersonNode;
@@ -142,17 +143,31 @@ const CustomNode = ({ data }: CustomNodeProps) => {
     setEdges(updatedEdges);
   };
 
-  const { setSelected } = useSelectedStore();
+  const { selected, setSelected } = useSelectedStore();
 
   const handleNodeClick = async () => {
     const person = await getPersonById(data.id);
     setSelected(person);
   };
 
+  const bg = colors[data.groupid] ?? '#e2e8f0';
+
   return (
-    <div className='p-4 min-w-52 shadow-sm rounded-xl bg-white border-[1.51px]'>
-      <div className='flex'>
-        <div onClick={handleNodeClick} className='flex items-center'>
+    <div
+      style={{
+        borderColor: bg,
+        backgroundColor:
+          selected?.id === data.id
+            ? `rgba(${parseInt(bg.slice(1, 3), 16)}, ${parseInt(
+                bg.slice(3, 5),
+                16
+              )}, ${parseInt(bg.slice(5, 7), 16)}, 0.2)`
+            : 'white',
+      }}
+      className='p-4 min-w-52 shadow-sm rounded-xl border-[1.51px]'
+    >
+      <div className='flex items-end'>
+        <div onClick={handleNodeClick} className='flex shrink-0 items-center'>
           <img
             className='h-12 aspect-square rounded-full overflow-hidden'
             src={
@@ -169,6 +184,7 @@ const CustomNode = ({ data }: CustomNodeProps) => {
         <div className='h-fit'>
           {!areChildrenLoaded && (
             <ChevronDown
+              style={{ color: bg }}
               className='cursor-pointer'
               onClick={() => onNodeButtonClick(data)}
             />

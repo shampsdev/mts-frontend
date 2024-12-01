@@ -30,7 +30,7 @@ const Flow = () => {
   const [edges, setEdges, onEdgesChange] = useEdgesState(layoutedEdges);
 
   useEffect(() => {
-    getPersonNodeById('8').then((x) => {
+    getPersonNodeById('7').then((x) => {
       const { nodes, edges } = getLayoutedElements(
         [
           {
