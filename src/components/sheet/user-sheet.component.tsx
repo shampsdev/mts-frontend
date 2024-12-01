@@ -1,4 +1,5 @@
 import { Sheet, SheetClose, SheetContent } from '@/components/ui/sheet';
+import { colors } from '@/shared/constants';
 import { useSelectedStore } from '@/shared/store/selected.store';
 import { Cross2Icon } from '@radix-ui/react-icons';
 import { Phone, Mail } from 'lucide-react';
@@ -21,14 +22,18 @@ export function UserSheet() {
               src={selected?.image ?? ''}
             />
           </div>
-          <div className='p-5 w-full h-[50%] rounded-xl border'>
+          <div className='flex flex-col gap-5 p-5 w-full h-[50%] rounded-xl border'>
             <div className='text-2xl font-medium'>Контакты</div>
             <div className='flex items-center gap-2'>
-              <Phone className='w-5 h-5 text-stone-500' />
+              <div className='bg-[#EDF0FB] text-[#1846C7] rounded-lg'>
+                <Phone className='w-8 h-8 p-2' />
+              </div>
               <span>{selected?.contacts.phone}</span>
             </div>
             <div className='flex items-center gap-2'>
-              <Mail className='w-5 h-5 text-stone-500' />
+              <div className='bg-[#EDF0FB] text-[#1846C7] rounded-lg'>
+                <Mail className='w-8 h-8 p-2' />
+              </div>
               <span>{selected?.contacts.email}</span>
             </div>
           </div>
@@ -43,31 +48,46 @@ export function UserSheet() {
                 {selected?.surname} {selected?.name} {selected?.middle_name_rus}
               </div>
               <span className='text-stone-200'>|</span>
-              <div className='text-stone-500 pt-1'>
-                id{selected?.id}
-              </div>
+              <div className='text-stone-500 pt-1'>id{selected?.id}</div>
             </div>
-            <div className='grid mt-auto grid-cols-2'>
-              <div>Должность:</div>
+            <div className='grid h-full grid-cols-2 pb-2'>
+              <div className='text-gray-500'>Должность:</div>
               <div>{selected?.jobtitle}</div>
-              <div>Департамент:</div>
+              <div className='text-gray-500'>Департамент:</div>
               <div>{selected?.department}</div>
-              <div>Подразделение:</div>
-              <div>{selected?.division}</div>
-              <div>Статус:</div>
+              <div className='text-gray-500'>Подразделение:</div>
+              <div>
+                <div
+                  style={{
+                    backgroundColor: `rgba(${parseInt(
+                      colors[selected?.division ?? '']?.slice(1, 3),
+                      16
+                    )}, ${parseInt(
+                      colors[selected?.division ?? '']?.slice(3, 5),
+                      16
+                    )}, ${parseInt(
+                      colors[selected?.division ?? '']?.slice(5, 7),
+                      16
+                    )}, 0.2)`,
+                    color: colors[selected?.division ?? ''] ?? '',
+                  }}
+                  className='p-2 text-sm rounded-full font-medium text-center'
+                >
+                  {selected?.division}
+                </div>
+              </div>
+              <div className='text-gray-500'>Статус:</div>
               <div>{selected?.status}</div>
             </div>
           </div>
           <div className='p-5 w-full h-full rounded-l-xl border'>
             <div className='grid h-full grid-cols-2'>
-              <div>Часы работы:</div>
+              <div className='text-gray-500'>Часы работы:</div>
               <div>{selected?.working_hour}</div>
-              <div>Место работы:</div>
+              <div className='text-gray-500'>Место работы:</div>
               <div>{selected?.workplace}</div>
-              <div>О себе:</div>
-              <div>
-                {selected?.about}
-              </div>
+              <div className='text-gray-500'>О себе:</div>
+              <div>{selected?.about}</div>
             </div>
           </div>
         </div>
