@@ -21,6 +21,8 @@ export function CommandMenu() {
   const [error, setError] = useState<string | null>(null);
   const { moveFromTo } = useUserFlow();
 
+  const { selected } = useSelectedStore();
+
   const handleQueryChange = (search: string) => {
     setQuery(search);
   };
@@ -77,7 +79,7 @@ export function CommandMenu() {
               onSelect={() => {
                 setOpen(false);
                 setSelected(result);
-                moveFromTo('8', result.id);
+                moveFromTo(selected?.id ?? '8', result.id);
               }}
               key={result.id}
               className='flex justify-between'
