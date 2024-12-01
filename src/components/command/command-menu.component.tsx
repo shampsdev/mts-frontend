@@ -11,9 +11,11 @@ import { API_URL, colors } from '@/shared/constants';
 import { useUserFlow } from '@/shared/hooks/useUserFlow';
 import { Badge } from '../ui/badge';
 import { useCommandStore } from '@/shared/store/command.store';
+import { useSelectedStore } from '@/shared/store/selected.store';
 
 export function CommandMenu() {
   const { open, setOpen } = useCommandStore();
+  const { setSelected } = useSelectedStore();
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<Person[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -79,6 +81,7 @@ export function CommandMenu() {
             <CommandItem
               onSelect={async () => {
                 moveFromTo('8', result.id);
+                setSelected(result);
                 setOpen(false);
               }}
               key={result.id}

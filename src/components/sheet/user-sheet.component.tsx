@@ -14,7 +14,10 @@ export function UserSheet() {
         if (!open) setSelected(null);
       }}
     >
-      <SheetContent className='flex gap-5'>
+      <SheetContent className='flex flex-col sm:flex-row gap-5 overflow-y-auto'>
+        <SheetClose className='sm:hidden'>
+          <Cross2Icon className='ml-auto h-5 w-5' />
+        </SheetClose>
         <div className='flex flex-col h-full w-auto gap-5'>
           <div className='aspect-square overflow-hidden h-[50%] rounded-xl bg-stone-100'>
             <img
@@ -22,7 +25,7 @@ export function UserSheet() {
               src={selected?.image ?? ''}
             />
           </div>
-          <div className='flex flex-col gap-5 p-5 w-full h-[50%] rounded-xl border'>
+          <div className='flex flex-col gap-5 p-5 w-full sm:h-[50%] rounded-xl border'>
             <div className='text-2xl font-medium'>Контакты</div>
             <div className='flex items-center gap-2'>
               <div className='bg-[#EDF0FB] text-[#1846C7] rounded-lg'>
@@ -39,8 +42,8 @@ export function UserSheet() {
           </div>
         </div>
         <div className='flex gap-5 flex-col h-full w-full'>
-          <div className='relative p-5 w-full h-full rounded-l-xl border'>
-            <SheetClose className='absolute right-5 top-5'>
+          <div className='relative p-5 w-full h-full rounded-xl sm:rounded-r-none border'>
+            <SheetClose className='hidden sm:block absolute right-5 top-5'>
               <Cross2Icon className='h-5 w-5' />
             </SheetClose>
             <div className='flex items-center gap-4'>
@@ -80,7 +83,7 @@ export function UserSheet() {
               <div>{selected?.status}</div>
             </div>
           </div>
-          <div className='p-5 w-full h-full rounded-l-xl border'>
+          <div className='p-5 w-full h-full rounded-xl sm:rounded-r-none border'>
             <div className='grid h-full grid-cols-2'>
               <div className='text-gray-500'>Часы работы:</div>
               <div>{selected?.working_hour}</div>
