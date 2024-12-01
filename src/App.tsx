@@ -2,6 +2,7 @@ import '@xyflow/react/dist/style.css';
 import Flow from './components/tree/flow.component';
 import { CommandMenu } from './components/command/command-menu.component';
 import { ReactFlowProvider } from '@xyflow/react';
+import { UserSheet } from './components/sheet/user-sheet.component';
 
 export default function App() {
   return (
@@ -9,6 +10,7 @@ export default function App() {
       <ReactFlowProvider>
         <Flow />
         <CommandMenu />
+        <UserSheet />
       </ReactFlowProvider>
     </div>
   );

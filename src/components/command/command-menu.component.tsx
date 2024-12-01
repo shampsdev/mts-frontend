@@ -7,14 +7,16 @@ import {
   CommandItem,
 } from '../ui/command';
 import { Person } from '@/shared/interfaces/person.interface';
-import { getPersonNodePath } from '@/shared/api/node.api';
 import { API_URL } from '@/shared/constants';
+import { useUserFlow } from '@/shared/hooks/useUserFlow';
 
 export function CommandMenu() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<Person[]>([]);
   const [error, setError] = useState<string | null>(null);
+
+  const { moveFromTo } = useUserFlow();
 
   const handleQueryChange = (search: string) => {
     setQuery(search);
@@ -31,9 +33,7 @@ export function CommandMenu() {
 
       try {
         const response = await fetch(
-          `${API_URL}/persons/search?text=${encodeURIComponent(
-            query
-          )}`
+          `${API_URL}/persons/search?text=${encodeURIComponent(query)}`
         );
         const data = await response.json();
         setResults(data);
@@ -76,8 +76,7 @@ export function CommandMenu() {
           return (
             <CommandItem
               onSelect={async () => {
-                const path = await getPersonNodePath('8', result.id);
-                console.log(path);
+                moveFromTo('8', result.id);
                 setOpen(false);
               }}
               key={result.id}
