@@ -1,124 +1,123 @@
-import { useCallback } from 'react';
 import {
     ReactFlow,
     useNodesState,
     useEdgesState,
-    addEdge,
     Background,
     BackgroundVariant,
     ConnectionLineType,
+    Node,
 } from '@xyflow/react';
-
-import dagre from '@dagrejs/dagre';
-
 import '@xyflow/react/dist/base.css';
 
 import CustomNode from './custom-node.component';
+import { data } from '@/shared/data';
+import { getPersonNodeById } from '@/shared/api/node.api';
+import { PersonNode } from '@/shared/person-node.interface';
+import { getLayoutedElements } from '@/lib/tree-layout';
 
 const nodeTypes = {
     custom: CustomNode,
 };
 
-const initNodes = [
+const initNodes: Node<PersonNode>[] = [
     {
-        id: '1',
+        id: data[3].id,
         type: 'custom',
-        data: { name: 'Мамут Рахал', job: 'CEO', emoji: '😎' },
+        data: data[3],
         position: { x: 0, y: 50 },
-    },
-    {
-        id: '2',
-        type: 'custom',
-        data: { name: 'Матьe Балл', job: 'Designer', emoji: '🤓' },
-        position: { x: -200, y: 200 },
-    },
-    {
-        id: '3',
-        type: 'custom',
-        data: { name: 'Яша Лава', job: 'Developer', emoji: '🤩' },
-        position: { x: 200, y: 200 },
-    },
-    {
-        id: '4',
-        type: 'custom',
-        data: { name: 'Головач Лена', job: 'QA', emoji: '🤩' },
-        position: { x: 200, y: 200 },
     }
 ];
 
-const initEdges = [
-    {
-        id: 'e1-2',
-        source: '1',
-        target: '2',
-    },
-    {
-        id: 'e1-3',
-        source: '1',
-        target: '3',
-    },
-    {
-        id: 'e1-4',
-        source: '1',
-        target: '4',
-    },
-];
-
-const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
-
-const nodeWidth = 180;
-const nodeHeight = 40;
-
-const getLayoutedElements = (nodes, edges) => {
-    dagreGraph.setGraph({ rankdir: 'TB' });
-
-    nodes.forEach((node) => {
-        dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight });
-    });
-
-    edges.forEach((edge) => {
-        dagreGraph.setEdge(edge.source, edge.target);
-    });
-
-    dagre.layout(dagreGraph);
-
-    const newNodes = nodes.map((node) => {
-        const nodeWithPosition = dagreGraph.node(node.id);
-        const newNode = {
-            ...node,
-            targetPosition: 'top',
-            sourcePosition: 'bottom',
-            position: {
-                x: nodeWithPosition.x - nodeWidth / 2,
-                y: nodeWithPosition.y - nodeHeight / 2,
-            },
-        };
-
-        return newNode;
-    });
-
-    return { nodes: newNodes, edges };
-};
-
 const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
     initNodes,
-    initEdges,
+    []
 );
 
 const Flow = () => {
-    const [nodes, setNodes, onNodesChange] = useNodesState(layoutedNodes);
+    const [nodes, setNodes, onNodesChange] = useNodesState<Node<PersonNode>>(layoutedNodes);
     const [edges, setEdges, onEdgesChange] = useEdgesState(layoutedEdges);
 
-    const onConnect = useCallback(
-        (params) =>
-            setEdges((eds) =>
-                addEdge(
-                    { ...params, type: ConnectionLineType.SmoothStep, animated: true },
-                    eds,
-                ),
-            ),
-        [],
-    );
+    const loadNodesRecursively = async (node: PersonNode, currentDepth: number, maxDepth: number) => {
+        if (currentDepth >= maxDepth) {
+            return { newNodes: [], newEdges: [] };
+        }
+
+        const parentNodes = await Promise.all(
+            node.parents.map((id) => getPersonNodeById(id))
+        );
+        const childNodes = await Promise.all(
+            node.children.map((id) => getPersonNodeById(id))
+        );
+
+        const newNodes = [
+            ...parentNodes
+                .filter((parent) => !nodes.some((existingNode) => existingNode.id === parent.id))
+                .map((parent) => ({
+                    id: parent.id,
+                    type: 'custom',
+                    data: parent,
+                    position: { x: 0, y: 0},
+                })),
+            ...childNodes
+                .filter((child) => !nodes.some((existingNode) => existingNode.id === child.id))
+                .map((child) => ({
+                    id: child.id,
+                    type: 'custom',
+                    data: child,
+                    position: { x: 0, y: 0},
+                })),
+        ];
+
+        const newEdges = [
+            ...parentNodes.map((parentNode) => ({
+                id: `e-${parentNode.id}-${node.id}`,
+                source: parentNode.id,
+                target: node.id,
+            })),
+            ...childNodes.map((childNode) => ({
+                id: `e-${node.id}-${childNode.id}`,
+                source: node.id,
+                target: childNode.id,
+            }))
+        ];
+
+        let allNewNodes = newNodes;
+        let allNewEdges = newEdges;
+
+        for (const parentNode of parentNodes) {
+            const { newNodes: nestedNodes, newEdges: nestedEdges } = await loadNodesRecursively(parentNode, currentDepth + 1, maxDepth);
+            allNewNodes = [...allNewNodes, ...nestedNodes];
+            allNewEdges = [...allNewEdges, ...nestedEdges];
+        }
+
+        for (const childNode of childNodes) {
+            const { newNodes: nestedNodes, newEdges: nestedEdges } = await loadNodesRecursively(childNode, currentDepth + 1, maxDepth);
+            allNewNodes = [...allNewNodes, ...nestedNodes];
+            allNewEdges = [...allNewEdges, ...nestedEdges];
+        }
+
+        return { newNodes: allNewNodes, newEdges: allNewEdges };
+    };
+
+    const onNodeDoubleClick = async (_: unknown, input: Node<PersonNode>) => {
+        const node = input.data;
+
+        const maxDepth = 1;
+        const { newNodes, newEdges } = await loadNodesRecursively(node, 0, maxDepth);
+
+        const uniqueNodes = [
+            ...new Map([...nodes, ...newNodes].map(node => [node.id, node])).values()
+        ];
+
+        const uniqueEdges = [
+            ...new Map([...edges, ...newEdges].map(edge => [edge.id, edge])).values()
+        ];
+
+        const { nodes: updatedNodes, edges: updatedEdges } = getLayoutedElements(uniqueNodes, uniqueEdges);
+
+        setNodes(updatedNodes);
+        setEdges(updatedEdges);
+    };
 
     return (
         <ReactFlow
@@ -126,17 +125,17 @@ const Flow = () => {
             edges={edges}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
-            onConnect={onConnect}
             connectionLineType={ConnectionLineType.SmoothStep}
             fitView
             snapToGrid
             nodeTypes={nodeTypes}
             snapGrid={[10, 10]}
             fitViewOptions={{
-                padding: 3
+                padding: 5
             }}
             style={{ backgroundColor: "#F7F9FB" }}
             proOptions={{ hideAttribution: true }}
+            onNodeDoubleClick={onNodeDoubleClick}
         >
             <Background gap={15} size={1} variant={BackgroundVariant.Dots} />
         </ReactFlow>

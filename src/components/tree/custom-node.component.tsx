@@ -1,29 +1,19 @@
 import { memo } from 'react';
+import { PersonNode } from '@/shared/person-node.interface';
 import { Handle, Position } from '@xyflow/react';
 
-function CustomNode({ data }) {
+function CustomNode({ data }: { data: PersonNode }) {
     return (
-        <div className="px-4 py-2 shadow-md rounded-md bg-white border border-stone-400">
+        <div className="p-2 shadow-sm rounded-md bg-white border">
             <div className="flex">
-                <div className="rounded-full w-12 h-12 flex justify-center items-center bg-gray-100">
-                    {data.emoji}
-                </div>
-                <div className="ml-2">
+                <img className="h-12 w-12 rounded-full overflow-hidden" src={data.image} />
+                <div className="mx-2">
                     <div className="text-lg font-bold">{data.name}</div>
-                    <div className="text-gray-500">{data.job}</div>
+                    <div className="text-sm text-gray-500">{data.jobtitle}</div>
                 </div>
             </div>
-
-            <Handle
-                type="target"
-                position={Position.Top}
-                className="bg-gray-50 border-stone-400"
-            />
-            <Handle
-                type="source"
-                className="bg-gray-50 border-stone-400"
-                position={Position.Bottom}
-            />
+            <Handle className="opacity-0" type="target" position={Position.Top} id="a" />
+            <Handle className="opacity-0" type="source" position={Position.Bottom} id="b" />
         </div>
     );
 }
