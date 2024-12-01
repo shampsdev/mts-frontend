@@ -1,6 +1,7 @@
 import { Sheet, SheetClose, SheetContent } from '@/components/ui/sheet';
 import { useSelectedStore } from '@/shared/store/selected.store';
 import { Cross2Icon } from '@radix-ui/react-icons';
+import { Phone, Mail } from 'lucide-react';
 
 export function UserSheet() {
   const { selected, setSelected } = useSelectedStore();
@@ -22,8 +23,14 @@ export function UserSheet() {
           </div>
           <div className='p-5 w-full h-[50%] rounded-xl border'>
             <div className='text-2xl font-medium'>Контакты</div>
-            <div>{selected?.contacts.phone}</div>
-            <div>{selected?.contacts.email}</div>
+            <div className='flex items-center gap-2'>
+              <Phone className='w-5 h-5 text-stone-500' />
+              <span>{selected?.contacts.phone}</span>
+            </div>
+            <div className='flex items-center gap-2'>
+              <Mail className='w-5 h-5 text-stone-500' />
+              <span>{selected?.contacts.email}</span>
+            </div>
           </div>
         </div>
         <div className='flex gap-5 flex-col h-full w-full'>
@@ -37,7 +44,7 @@ export function UserSheet() {
               </div>
               <span className='text-stone-200'>|</span>
               <div className='text-stone-500 pt-1'>
-                id{(Math.random() * 100000).toFixed()}
+                id{selected?.id}
               </div>
             </div>
             <div className='grid mt-auto grid-cols-2'>
@@ -59,8 +66,7 @@ export function UserSheet() {
               <div>{selected?.workplace}</div>
               <div>О себе:</div>
               <div>
-                Team Lead of Development Team, люблю носки, вкусно кушать и быть
-                в отпуске
+                {selected?.about}
               </div>
             </div>
           </div>
