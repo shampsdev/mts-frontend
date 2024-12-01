@@ -7,14 +7,14 @@ import { UserSheet } from './components/sheet/user-sheet.component';
 export default function App() {
   return (
     <div style={{ width: '100vw', height: '100vh' }}>
-      <Header />
       <BrowserRouter>
+        <Header />
         <Routes>
           <Route path='/' element={<HomePage />} />
           <Route path='/find' element={<FindPage />} />
         </Routes>
+        <UserSheet />
       </BrowserRouter>
-      <UserSheet />
     </div>
   );
 }
